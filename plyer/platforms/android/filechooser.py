@@ -138,7 +138,7 @@ class AndroidFileChooser(FileChooser):
             kwargs.pop("filters")[0] if "filters" in kwargs else ""
 
         # create Intent for opening
-        file_intent = Intent(Intent.ACTION_GET_CONTENT)
+        file_intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         if not self.selected_mime_type or \
             type(self.selected_mime_type) != str or \
                 self.selected_mime_type not in self.mime_type:
