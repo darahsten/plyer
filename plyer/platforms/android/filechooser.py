@@ -45,7 +45,7 @@ using that result will use an incorrect one i.e. the default value of
 
 from os.path import join, basename
 from random import randint
-
+from sentry_sdk import capture_message, capture_exception
 from android import activity, mActivity
 from jnius import autoclass, cast, JavaException
 from plyer.facades import FileChooser
@@ -170,6 +170,7 @@ class AndroidFileChooser(FileChooser):
 
         .. versionadded:: 1.4.0
         '''
+        capture_message(f"On activity result called with {data}")
 
         # not our response
         if request_code != self.select_code:
@@ -186,8 +187,10 @@ class AndroidFileChooser(FileChooser):
                 ele = self._resolve_uri(
                     data.getClipData().getItemAt(count).getUri()) or []
                 selection.append(ele)
-        except Exception:
+        except Exception as e:
+            capture_exception(e)
             selection = [self._resolve_uri(data.getData()), ]
+        capture_message(f"Selection is {selection}")
 
         # return value to object
         self.selection = selection
