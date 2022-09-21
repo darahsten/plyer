@@ -118,6 +118,7 @@ class AndroidFileChooser(FileChooser):
 
         .. versionadded:: 1.4.0
         '''
+        capture_message(f"handling the selection {selection}")
         return selection
 
     def _open_file(self, **kwargs):

@@ -7,6 +7,7 @@ from plyer.platforms.android import activity
 
 Intent = autoclass('android.content.Intent')
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
+FileProvider = autoclass('androidx.core.content.FileProvider')
 MediaStore = autoclass('android.provider.MediaStore')
 Uri = autoclass('android.net.Uri')
 
@@ -32,8 +33,13 @@ class AndroidCamera(Camera):
         android.activity.unbind(on_activity_result=self._on_activity_result)
         android.activity.bind(on_activity_result=self._on_activity_result)
         intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-        uri = Uri.parse('file://' + filename)
-        parcelable = cast('android.os.Parcelable', uri)
+        context = cast('android.content.Context', android.activity.getApplicationContext())
+        video_url = FileProvider.getUriForFile(
+            context,
+            context.getApplicationContext()
+            .getPackageName() + ".provider", filename);
+        # uri = Uri.parse('file://' + filename)
+        parcelable = cast('android.os.Parcelable', video_url)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, parcelable)
 
         # 0 = low quality, suitable for MMS messages,
